@@ -1,19 +1,73 @@
 import { useState } from "react";
 import CustomButton from "./CustomButton";
 
+function FormFields({ form, handleChange }) {
+    return (
+        <>
+            <div style={{ display: 'flex', gap: '16px' }}>
+                <div className="form-row" style={{ flex: 2 }}>
+                    <label htmlFor="schoolName">School Name:</label>
+                    <input
+                        id="schoolName"
+                        type="text"
+                        value={form.schoolName}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="form-row" style={{ flex: 1 }}>
+                    <label htmlFor="dateFrom">Date From:</label>
+                    <input
+                        id="dateFrom"
+                        type="text"
+                        value={form.dateFrom}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+            </div>
+            <div style={{ display: 'flex', gap: '16px' }}>
+                <div className="form-row" style={{ flex: 2 }}>
+                    <label htmlFor="titleOfStudy">Title of Study:</label>
+                    <input
+                        id="titleOfStudy"
+                        type="text"
+                        value={form.titleOfStudy}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="form-row" style={{ flex: 1 }}>
+                    <label htmlFor="dateTo">Date To:</label>
+                    <input
+                        id="dateTo"
+                        type="text"
+                        value={form.dateTo}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+            </div>
+        </>
+    );
+}
+
 function EducationalExperience() {
     const [experiences, setExperiences] = useState([
         {
             schoolName: "Cornell University, College of Arts and Sciences",
             titleOfStudy: "Bachelor of Arts, Computer Science",
-            dateOfStudy: "2022 - 2026",
+            dateFrom: "2022",
+            dateTo: "2026",
         },
     ]);
     const [form, setForm] = useState({
         schoolName: "",
         titleOfStudy: "",
-        dateOfStudy: "",
+        dateFrom: "",
+        dateTo: "",
     });
+    const [error, setError] = useState("");
     const [isAdding, setIsAdding] = useState(false);
     const [editIdx, setEditIdx] = useState(null);
 
@@ -23,9 +77,10 @@ function EducationalExperience() {
     };
 
     const handleAdd = () => {
-        setForm({ schoolName: "", titleOfStudy: "", dateOfStudy: "" });
+        setForm({ schoolName: "", titleOfStudy: "", dateFrom: "", dateTo: "" });
         setIsAdding(true);
         setEditIdx(null);
+        setError("");
     };
 
     const handleEdit = (idx) => {
@@ -36,6 +91,14 @@ function EducationalExperience() {
 
     const handleSave = (e) => {
         e.preventDefault();
+        // Validation: check all fields
+        const requiredFields = ["schoolName", "titleOfStudy", "dateFrom", "dateTo"];
+        const hasBlank = requiredFields.some((field) => !form[field].trim());
+        if (hasBlank) {
+            setError("Please fill out all fields before saving.");
+            return;
+        }
+        setError("");
         if (editIdx !== null) {
             // Update existing experience
             setExperiences((prev) => prev.map((exp, idx) => idx === editIdx ? form : exp));
@@ -43,15 +106,26 @@ function EducationalExperience() {
             // Add new experience
             setExperiences((prev) => [...prev, form]);
         }
-        setForm({ schoolName: "", titleOfStudy: "", dateOfStudy: "" });
+        setForm({ schoolName: "", titleOfStudy: "", dateFrom: "", dateTo: "" });
         setIsAdding(false);
         setEditIdx(null);
     };
 
     const handleCancel = () => {
-        setForm({ schoolName: "", titleOfStudy: "", dateOfStudy: "" });
+        setForm({ schoolName: "", titleOfStudy: "", dateFrom: "", dateTo: "" });
         setIsAdding(false);
         setEditIdx(null);
+        setError("");
+    };
+
+    const handleDelete = (idx) => {
+        setExperiences((prev) => prev.filter((_, i) => i !== idx));
+        // If deleting the currently edited experience, close the form
+        if (editIdx === idx) {
+            setEditIdx(null);
+            setIsAdding(false);
+            setForm({ schoolName: "", titleOfStudy: "", dateFrom: "", dateTo: "" });
+        }
     };
 
     return (
@@ -64,39 +138,17 @@ function EducationalExperience() {
                     <div className="same-row" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                         <p style={{ marginBottom: 0, marginTop: 0 }}><strong>{exp.schoolName}</strong></p>
                         <CustomButton isIcon isEditIcon handleClick={() => handleEdit(idx)} />
-                        <p style={{ marginTop: 0, marginLeft: "auto" }}>{exp.dateOfStudy}</p>
+                        <CustomButton isIcon isDeleteIcon handleClick={() => handleDelete(idx)} />
+                        <p style={{ marginTop: 0, marginLeft: "auto" }}>{exp.dateFrom} - {exp.dateTo}</p>
                     </div>
                     <p style={{ marginTop: 0 }}>{exp.titleOfStudy}</p>
                     {editIdx === idx && (
-                        <form onSubmit={handleSave} style={{ marginTop: "1rem" }}>
-                            <div className="form-row">
-                                <label htmlFor="schoolName">School Name:</label>
-                                <input
-                                    id="schoolName"
-                                    type="text"
-                                    value={form.schoolName}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="form-row">
-                                <label htmlFor="titleOfStudy">Title of Study:</label>
-                                <input
-                                    id="titleOfStudy"
-                                    type="text"
-                                    value={form.titleOfStudy}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div className="form-row">
-                                <label htmlFor="dateOfStudy">Date of Study:</label>
-                                <input
-                                    id="dateOfStudy"
-                                    type="text"
-                                    value={form.dateOfStudy}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                        <form onSubmit={handleSave}>
+                            <FormFields form={form} handleChange={handleChange} />
+                            {error && (
+                                <div style={{ color: 'red', textAlign: 'center', margin: '12px 0' }}>{error}</div>
+                            )}
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 24, width: '100%' }}>
                                 <CustomButton text="Save" handleClick={handleSave} />
                                 <CustomButton text="Cancel" handleClick={handleCancel} />
                             </div>
@@ -107,40 +159,19 @@ function EducationalExperience() {
             {/* Add experience form at the bottom */}
             {isAdding ? (
                 <form onSubmit={handleSave}>
-                    <div className="form-row">
-                        <label htmlFor="schoolName">School Name:</label>
-                        <input
-                            id="schoolName"
-                            type="text"
-                            value={form.schoolName}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="form-row">
-                        <label htmlFor="titleOfStudy">Title of Study:</label>
-                        <input
-                            id="titleOfStudy"
-                            type="text"
-                            value={form.titleOfStudy}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="form-row">
-                        <label htmlFor="dateOfStudy">Date of Study:</label>
-                        <input
-                            id="dateOfStudy"
-                            type="text"
-                            value={form.dateOfStudy}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                    <FormFields form={form} handleChange={handleChange} />
+                    {error && (
+                        <div style={{ color: 'red', textAlign: 'center', margin: '12px 0' }}>{error}</div>
+                    )}
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 24, width: '100%' }}>
                         <CustomButton text="Save" handleClick={handleSave} />
                         <CustomButton text="Cancel" handleClick={handleCancel} />
                     </div>
                 </form>
             ) : (
-                <CustomButton handleClick={handleAdd} text="Add Educational Experience" />
+                <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                    <CustomButton handleClick={handleAdd} text="Add Educational Experience" />
+                </div>
             )}
         </section>
     );

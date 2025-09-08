@@ -40,7 +40,9 @@ function GeneralInfo(props) {
                             <p>{form.linkedIn}</p>
                         </div>
                     </section>
-                    <CustomButton handleClick={handleEdit} text="Edit Personal Info" style={{ marginTop: 0 }} />
+                    <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                        <CustomButton handleClick={handleEdit} text="Edit Personal Info" style={{ marginTop: 0 }} />
+                    </div>
                 </>
             ) : (
                 <form onSubmit={handleSave}>
@@ -80,7 +82,7 @@ function GeneralInfo(props) {
                             onChange={handleChange}
                         />
                     </div>
-                    <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 24, width: '100%' }}>
                         <CustomButton text="Save" handleClick={handleSave} />
                         <CustomButton text="Cancel" handleClick={handleCancel} />
                     </div>

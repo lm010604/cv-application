@@ -1,10 +1,12 @@
 
 function CustomButton(props) {
-    const btnClass = props.isEditIcon ? "edit-icon-btn" : "custom-btn";
+    const btnClass = props.isEditIcon ? "edit-icon-btn" : (props.isDeleteIcon ? "delete-icon-btn" : "custom-btn");
     return (
         <button className={btnClass} onClick={props.handleClick}>
-            {props.isIcon ? (
-                <img src="/edit.svg" alt="Edit" style={{ width: 20, height: 20, verticalAlign: "middle" }} />
+            {props.isEditIcon ? (
+                <img src="/edit.svg" alt="Edit" style={{ width: 15, height: 15, verticalAlign: "middle" }} />
+            ) : props.isDeleteIcon ? (
+                <img src="/delete.svg" alt="Delete" style={{ width: 15, height: 15, verticalAlign: "middle" }} />
             ) : props.text}
         </button>
     )

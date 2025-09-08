@@ -1,11 +1,12 @@
-.main-tasks-textarea {
-  width: 100%;
-  font-family: sans-serif;
-  box-sizing: border-box;
-}
-
 /* Edit icon button: no padding */
 .edit-icon-btn {
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.delete-icon-btn {
   padding: 0;
   background-color: transparent;
   border: none;
@@ -43,6 +44,12 @@
   border-radius: 4px;
 }
 
+.main-tasks-textarea {
+  width: 100%;
+  font-family: sans-serif;
+  box-sizing: border-box;
+}
+
 form {
   background-color: rgb(255, 255, 255);
   border-radius: 16px;
@@ -60,7 +67,7 @@ section>hr {
 }
 
 :root {
-  font-family: 'Century', serif;
+  font-family: sans-serif, Arial, Helvetica;
   line-height: 1.5;
   /* font-weight: 600; */
 
