@@ -3,10 +3,10 @@ import CustomButton from "./CustomButton";
 
 function GeneralInfo(props) {
     const [form, setForm] = useState({
-        name: props.name || "John Doe",
-        email: props.email || "johndoes@gmail.com",
-        phone: props.phone || "123-456-7890",
-        linkedIn: props.linkedIn || "linkedin.com/in/johndoe",
+        name: props.name || "Lauren Mok",
+        email: props.email || "laurensymok@gmail.com",
+        phone: props.phone || "607-339-1653",
+        linkedIn: props.linkedIn || "linkedin.com/in/laurensymok",
     });
     const [isEditing, setIsEditing] = useState(false);
 
@@ -40,9 +40,6 @@ function GeneralInfo(props) {
                             <p>{form.linkedIn}</p>
                         </div>
                     </section>
-                    <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                        <CustomButton handleClick={handleEdit} text="Edit Personal Info" style={{ marginTop: 0 }} />
-                    </div>
                 </>
             ) : (
                 <form onSubmit={handleSave}>
@@ -87,6 +84,12 @@ function GeneralInfo(props) {
                         <CustomButton text="Cancel" handleClick={handleCancel} />
                     </div>
                 </form>
+            )}
+            {/* Button at bottom left, aligned with section items */}
+            {!isEditing && (
+                <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+                    <CustomButton handleClick={handleEdit} text="Edit Personal Info" style={{ margin: 0, padding: 0 }} />
+                </div>
             )}
         </section>
     );

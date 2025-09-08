@@ -149,5 +149,3 @@ section:first-of-type {
   align-items: center;
   gap: 8px;
 }
-
-/* Remove prefers-color-scheme overrides to force light mode */

@@ -56,9 +56,15 @@ function EducationalExperience() {
     const [experiences, setExperiences] = useState([
         {
             schoolName: "Cornell University, College of Arts and Sciences",
-            titleOfStudy: "Bachelor of Arts, Computer Science",
+            titleOfStudy: "Bachelor of Arts, Information Science",
             dateFrom: "2022",
             dateTo: "2026",
+        },
+        {
+            schoolName: "German Swiss International School",
+            titleOfStudy: "High School Diploma",
+            dateFrom: "2018",
+            dateTo: "2022",
         },
     ]);
     const [form, setForm] = useState({
@@ -156,7 +162,7 @@ function EducationalExperience() {
                     )}
                 </div>
             ))}
-            {/* Add experience form at the bottom */}
+            {/* Add experience form at the bottom left, aligned with section items */}
             {isAdding ? (
                 <form onSubmit={handleSave}>
                     <FormFields form={form} handleChange={handleChange} />
@@ -169,7 +175,7 @@ function EducationalExperience() {
                     </div>
                 </form>
             ) : (
-                <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', marginTop: 16 }}>
                     <CustomButton handleClick={handleAdd} text="Add Educational Experience" />
                 </div>
             )}

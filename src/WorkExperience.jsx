@@ -192,7 +192,7 @@ function WorkExperience() {
                     )}
                 </div>
             ))}
-            {/* Add experience form at the bottom */}
+            {/* Add experience form at the bottom left, aligned with section items */}
             {isAdding ? (
                 <form onSubmit={handleSave}>
                     <WorkFormFields form={form} handleChange={handleChange} />
@@ -205,7 +205,7 @@ function WorkExperience() {
                     </div>
                 </form>
             ) : (
-                <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', marginTop: 16 }}>
                     <CustomButton handleClick={handleAdd} text="Add Work Experience" />
                 </div>
             )}
