@@ -1,7 +1,68 @@
+.main-tasks-textarea {
+  width: 100%;
+  font-family: sans-serif;
+  box-sizing: border-box;
+}
+
+/* Edit icon button: no padding */
+.edit-icon-btn {
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+/* CustomButton blue background */
+.custom-btn {
+  background-color: #197fd2;
+  color: #fff;
+}
+
+/* Align form labels and inputs horizontally */
+.form-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.form-row label {
+  min-width: 120px;
+  text-align: left;
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.form-row input,
+.form-row textarea {
+  width: 220px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  border: rgb(182, 180, 180) 0.5px solid;
+  border-radius: 4px;
+}
+
+form {
+  background-color: rgb(255, 255, 255);
+  border-radius: 16px;
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+section>p {
+  margin-bottom: 0.2em;
+}
+
+section>hr {
+  margin-top: 0.2em;
+  margin-bottom: 1em;
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Century', serif;
   line-height: 1.5;
-  font-weight: 400;
+  /* font-weight: 600; */
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -18,6 +79,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -25,7 +87,7 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  align-items: flex-start;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -33,25 +95,52 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  margin: 0;
 }
 
 button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
+  font-size: 0.8em;
+  font-weight: 600;
+  font-family: sans-serif;
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+section {
+  border-radius: 16px;
+  text-align: left;
+  padding: 20px;
+  margin: 20px;
+  background-color: rgb(225, 239, 248);
+  min-width: 800px;
+}
+
+section:first-of-type {
+  text-align: center;
+}
+
+.same-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 @media (prefers-color-scheme: light) {
@@ -59,9 +148,11 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }

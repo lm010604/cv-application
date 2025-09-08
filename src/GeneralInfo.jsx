@@ -1,69 +1,92 @@
 import { useState } from "react";
 import CustomButton from "./CustomButton";
 
-function GeneralInfo() {
-    const [name, setName] = useState("John Doe");
-    const [email, setEmail] = useState("johndoe@gmail.com");
-    const [phone, setPhone] = useState("123-456-7890");
-    const [isDisabled, setDisabled] = useState(true);
+function GeneralInfo(props) {
+    const [form, setForm] = useState({
+        name: props.name || "John Doe",
+        email: props.email || "johndoes@gmail.com",
+        phone: props.phone || "123-456-7890",
+        linkedIn: props.linkedIn || "linkedin.com/in/johndoe",
+    });
+    const [isEditing, setIsEditing] = useState(false);
 
-    const handleNameChange = (e) => {
-        setName(e.target.value);
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setForm((prevForm) => ({
+            ...prevForm,
+            [id]: value,
+        }));
     };
 
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value);
-    };
-
-    const handlePhoneChange = (e) => {
-        setPhone(e.target.value);
-    };
-
-    const handleEdit = () => {
-        setDisabled(!isDisabled);
+    const handleSave = (e) => {
+        e.preventDefault();
+        setIsEditing(false);
     }
 
+    const handleEdit = () => setIsEditing(true);
+    const handleCancel = () => setIsEditing(false);
+
     return (
-        <>
-            <div>
-                <form>
-                    <div>
+        <section>
+            {!isEditing ? (
+                <>
+                    <section style={{ marginBottom: 0 }}>
+                        <h1>{form.name}</h1>
+                        <div style={{ display: "flex", flexDirection: "row", gap: 16, justifyContent: "center" }}>
+                            <p>{form.email}</p>
+                            <p> | </p>
+                            <p>{form.phone}</p>
+                            <p> | </p>
+                            <p>{form.linkedIn}</p>
+                        </div>
+                    </section>
+                    <CustomButton handleClick={handleEdit} text="Edit Personal Info" style={{ marginTop: 0 }} />
+                </>
+            ) : (
+                <form onSubmit={handleSave}>
+                    <div className="form-row">
                         <label htmlFor="name">Name:</label>
                         <input
-                            type="text"
-                            disabled={isDisabled}
                             id="name"
-                            value={name}
-                            onChange={handleNameChange}
+                            type="text"
+                            value={form.name}
+                            onChange={handleChange}
                         />
                     </div>
-                    <div>
+                    <div className="form-row">
                         <label htmlFor="email">Email:</label>
                         <input
-                            type="email"
-                            disabled={isDisabled}
                             id="email"
-                            value={email}
-                            onChange={handleEmailChange}
+                            type="email"
+                            value={form.email}
+                            onChange={handleChange}
                         />
                     </div>
-                    <div>
+                    <div className="form-row">
                         <label htmlFor="phone">Phone Number:</label>
                         <input
-                            type="tel"
-                            disabled={isDisabled}
                             id="phone"
-                            value={phone}
-                            onChange={handlePhoneChange}
+                            type="tel"
+                            value={form.phone}
+                            onChange={handleChange}
                         />
                     </div>
+                    <div className="form-row">
+                        <label htmlFor="linkedIn">LinkedIn:</label>
+                        <input
+                            id="linkedIn"
+                            type="text"
+                            value={form.linkedIn}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                        <CustomButton text="Save" handleClick={handleSave} />
+                        <CustomButton text="Cancel" handleClick={handleCancel} />
+                    </div>
                 </form>
-            </div>
-            <h1>{name}</h1>
-            <h3>{email}</h3>
-            <h3>{phone}</h3>
-            <CustomButton handleClick={handleEdit} text={isDisabled ? "Edit" : "Save"} />
-        </>
+            )}
+        </section>
     );
 }
 
