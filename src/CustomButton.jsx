@@ -1,5 +1,5 @@
-import editUrl from "/edit.svg";
-import deleteUrl from "/delete.svg";
+import editUrl from "./assets/edit.svg";
+import deleteUrl from "./assets/delete.svg";
 
 
 function CustomButton(props) {
