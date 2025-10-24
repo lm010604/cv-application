@@ -69,12 +69,9 @@ section>hr {
 :root {
   font-family: sans-serif, Arial, Helvetica;
   line-height: 1.5;
-  /* font-weight: 600; */
-
   color-scheme: only light;
   color: #213547;
   background-color: #ffffff;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -95,8 +92,10 @@ body {
   margin: 0;
   display: flex;
   align-items: flex-start;
+  justify-content: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #f4f7fb;
 }
 
 h1 {
@@ -148,4 +147,13 @@ section:first-of-type {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+@media print {
+  body {
+    display: block;
+    justify-content: initial;
+    min-height: auto;
+    background-color: #ffffff;
+  }
 }
