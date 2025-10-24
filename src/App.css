@@ -43,3 +43,15 @@
 .read-the-docs {
   color: #888;
 }
+
+@media print {
+  .export-btn {
+    display: none;
+  }
+
+  body {
+    margin: 0;
+    -webkit-print-color-adjust: exact;
+    /* keep colors */
+  }
+}
