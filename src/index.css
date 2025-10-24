@@ -149,3 +149,25 @@ section:first-of-type {
   align-items: center;
   gap: 8px;
 }
+
+.required-asterisk {
+  color: red;
+  font-weight: bold;
+}
+
+.custom-section {
+  border-top: 1px solid #dce3f0;
+  padding-top: 12px;
+  margin-top: 16px;
+}
+
+.custom-item {
+  margin-top: 8px;
+  background: #f9fbff;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.custom-section h2 {
+  margin-bottom: 8px;
+}

@@ -17,7 +17,19 @@ function ExperienceItem({
                 <CustomButton isIcon isDeleteIcon handleClick={onDelete} />
                 <p style={{ marginTop: 0, marginLeft: "auto" }}>{dateText}</p>
             </div>
-            {subText && <p style={{ marginTop: 0 }}>{subText}</p>}
+            {subText && (
+                <p
+                    style={{
+                        marginTop: 0,
+                        whiteSpace: "pre-line"   // 👈 preserve newlines
+                    }}
+                >
+                    {subText}
+                </p>
+            )}
+
+
+
             {children}
         </div>
     );
