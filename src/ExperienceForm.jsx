@@ -8,13 +8,20 @@ function ExperienceForm({ fields, form, onChange, onSave, onCancel, error, child
             {rows
                 ? rows.map((row, i) => (
                     <div key={i} style={{ display: 'flex', gap: '16px' }}>
-                        {row.map((fieldId,) => {
-                            const field = fields.find(f => f.id === fieldId);
+                        {row.map((fieldId) => {
+                            const field = fields.find((f) => f.id === fieldId);
                             if (!field) return null;
                             // If field is 'dateFrom' or 'dateTo', align right
                             const isRight = fieldId === 'dateFrom' || fieldId === 'dateTo';
                             return (
-                                <div key={field.id} style={{ flex: isRight ? '0 0 180px' : 1, display: 'flex', justifyContent: isRight ? 'flex-end' : 'flex-start' }}>
+                                <div
+                                    key={field.id}
+                                    style={{
+                                        flex: isRight ? '0 0 180px' : 1,
+                                        display: 'flex',
+                                        justifyContent: isRight ? 'flex-end' : 'flex-start',
+                                    }}
+                                >
                                     <FormRow
                                         label={field.label}
                                         id={field.id}
@@ -22,13 +29,15 @@ function ExperienceForm({ fields, form, onChange, onSave, onCancel, error, child
                                         value={form[field.id]}
                                         onChange={onChange}
                                         required={field.required}
+                                        rows={field.rows}
+                                        placeholder={field.placeholder}
                                     />
                                 </div>
                             );
                         })}
                     </div>
                 ))
-                : fields.map(({ label, id, type, required }) => (
+                : fields.map(({ label, id, type, required, rows, placeholder }) => (
                     <FormRow
                         key={id}
                         label={label}
@@ -37,6 +46,8 @@ function ExperienceForm({ fields, form, onChange, onSave, onCancel, error, child
                         value={form[id]}
                         onChange={onChange}
                         required={required}
+                        rows={rows}
+                        placeholder={placeholder}
                     />
                 ))}
             {children}
