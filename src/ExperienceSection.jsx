@@ -11,7 +11,8 @@ function ExperienceSection({
     getSubText,
     getDateText,
     extraFormFields, // for textarea or other custom fields
-    formRows
+    formRows,
+    renderExtraContent,
 }) {
     const [items, setItems] = useState(initialItems);
     const [form, setForm] = useState(fields.reduce((acc, f) => ({ ...acc, [f.id]: "" }), {}));
@@ -93,6 +94,7 @@ function ExperienceSection({
                     onEdit={() => handleEdit(idx)}
                     onDelete={() => handleDelete(idx)}
                 >
+                    {renderExtraContent && editIdx !== idx && renderExtraContent(item)}
                     {editIdx === idx && (
                         <ExperienceForm
                             fields={fields}
