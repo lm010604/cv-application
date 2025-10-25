@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ExperienceItem from "./ExperienceItem";
 import ExperienceForm from "./ExperienceForm";
 import CustomButton from "./CustomButton";
@@ -6,7 +6,7 @@ import CustomButton from "./CustomButton";
 function ExperienceSection({
     title,
     fields,
-    initialItems,
+    initialItems = [],
     getMainText,
     getSubText,
     getDateText,
@@ -14,11 +14,18 @@ function ExperienceSection({
     formRows,
     renderExtraContent,
 }) {
-    const [items, setItems] = useState(initialItems);
+    const [items, setItems] = useState(Array.isArray(initialItems) ? initialItems : []);
     const [form, setForm] = useState(fields.reduce((acc, f) => ({ ...acc, [f.id]: "" }), {}));
     const [error, setError] = useState("");
     const [isAdding, setIsAdding] = useState(false);
     const [editIdx, setEditIdx] = useState(null);
+
+    useEffect(() => {
+        if (Array.isArray(initialItems)) {
+            setItems(initialItems);
+        }
+    }, [initialItems]);
+
 
     const handleChange = (e) => {
         const { id, value } = e.target;

@@ -1,5 +1,6 @@
 
 import ExperienceSection from "./ExperienceSection";
+import { useState, useEffect } from "react";
 
 const workFields = [
     { label: "Company Name", id: "companyName", type: "text", required: true },
@@ -8,15 +9,15 @@ const workFields = [
     { label: "Date To", id: "dateTo", type: "text", required: true },
 ];
 
-const initialWork = [
-    {
-        companyName: "Tech Corp",
-        positionTitle: "Software Engineer",
-        mainTasks: "Developed web applications",
-        dateFrom: "2023",
-        dateTo: "Present",
-    }
-];
+// const initialWork = [
+//     {
+//         companyName: "Tech Corp",
+//         positionTitle: "Software Engineer",
+//         mainTasks: "Developed web applications",
+//         dateFrom: "2023",
+//         dateTo: "Present",
+//     }
+// ];
 
 function getMainText(item) {
     return `${item.companyName} | ${item.positionTitle}`;
@@ -66,12 +67,24 @@ const workRows = [
     ["positionTitle", "dateTo"],
 ];
 
-function WorkExperience() {
+function WorkExperience({ data, onChange }) {
+    const [items, setItems] = useState(data || []);
+
+    useEffect(() => {
+        if (Array.isArray(data)) {
+            setItems(data);
+        }
+    }, [data]);
+
+    useEffect(() => {
+        onChange(items);
+    }, [items, onChange]);
+
     return (
         <ExperienceSection
             title="WORK EXPERIENCE"
             fields={workFields}
-            initialItems={initialWork}
+            initialItems={items}
             getMainText={getMainText}
             getSubText={getSubText}
             getDateText={getDateText}

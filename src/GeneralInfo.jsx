@@ -1,15 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CustomButton from "./CustomButton";
 
-function GeneralInfo(props) {
+function GeneralInfo({ data, onChange }) {
     const [form, setForm] = useState({
-        name: props.name || "Lauren Mok",
-        email: props.email || "laurensymok@gmail.com",
-        phone: props.phone || "607-339-1653",
-        linkedIn: props.linkedIn || "linkedin.com/in/laurensymok",
-        website: props.website || "laurensymok.com"
+        name: data?.name || "Lauren Mok",
+        email: data?.email || "laurensymok@gmail.com",
+        phone: data?.phone || "607-339-1653",
+        linkedIn: data?.linkedIn || "linkedin.com/in/laurensymok",
+        website: data?.website || "laurensymok.com"
     });
     const [isEditing, setIsEditing] = useState(false);
+
+    useEffect(() => {
+        onChange(form);
+    }, [form, onChange]);
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -25,7 +29,11 @@ function GeneralInfo(props) {
     }
 
     const handleEdit = () => setIsEditing(true);
-    const handleCancel = () => setIsEditing(false);
+    const handleCancel = () => {
+        // Reset to last saved version from props
+        setForm(data);
+        setIsEditing(false);
+    };
 
     return (
         <section className="general-info">

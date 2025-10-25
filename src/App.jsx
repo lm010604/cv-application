@@ -1,144 +1,92 @@
-import "./App.css";
-import { useRef, useState } from "react";
-import CustomButton from "./CustomButton";
-import GeneralInfo from "./GeneralInfo";
-import EducationalExperience from "./EducationalExperience";
-import WorkExperience from "./WorkExperience";
-import ExperienceSection from "./ExperienceSection";
+import './App.css';
+import { useState, useEffect } from 'react';
+import GeneralInfo from './GeneralInfo';
+import EducationalExperience from './EducationalExperience';
+import WorkExperience from './WorkExperience';
+import CustomButton from './CustomButton';
 
 function App() {
-  const cvRef = useRef(null);
-  const [customSections, setCustomSections] = useState([]);
-  const [isAddingSection, setIsAddingSection] = useState(false);
-  const [newSectionTitle, setNewSectionTitle] = useState("");
-
-  const handleDownloadPdf = () => {
-    if (!cvRef.current) return;
-    const originalTitle = document.title;
-    document.title = "CV";
-    window.print();
-    setTimeout(() => {
-      document.title = originalTitle;
-    }, 0);
+  // Centralized CV state
+  const defaultCvData = {
+    generalInfo: {
+      name: 'Lauren Mok',
+      email: 'laurensymok@gmail.com',
+      phone: '607-339-1653',
+      linkedIn: 'linkedin.com/in/laurensymok',
+      website: 'laurensymok.com',
+    },
+    education: [],
+    work: [],
   };
 
-  const handleAddSection = (e) => {
-    e.preventDefault();
-    const title = newSectionTitle.trim();
-    if (title !== "") {
-      setCustomSections([...customSections, { id: Date.now(), title }]);
-      setNewSectionTitle("");
-      setIsAddingSection(false);
+  const [cvData, setCvData] = useState(defaultCvData);
+
+  // ✅ Load saved data from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('cvData');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+
+        // ✅ Merge safely without using stale cvData
+        setCvData({
+          generalInfo: parsed.generalInfo || defaultCvData.generalInfo,
+          education: Array.isArray(parsed.education)
+            ? parsed.education
+            : defaultCvData.education,
+          work: Array.isArray(parsed.work)
+            ? parsed.work
+            : defaultCvData.work,
+        });
+      } catch (err) {
+        console.error('Failed to parse saved CV data:', err);
+      }
+    }
+  }, []); // 👈 run once only
+
+  // ✅ Auto-save whenever cvData changes
+  useEffect(() => {
+    localStorage.setItem('cvData', JSON.stringify(cvData));
+  }, [cvData]);
+
+  // Update handlers
+  const updateGeneralInfo = (info) =>
+    setCvData((prev) => ({ ...prev, generalInfo: info }));
+
+  const updateEducation = (educationList) =>
+    setCvData((prev) => ({ ...prev, education: educationList }));
+
+  const updateWork = (workList) =>
+    setCvData((prev) => ({ ...prev, work: workList }));
+
+  // PDF + Reset
+  const handleDownloadPdf = () => window.print();
+
+  const handleReset = () => {
+    if (window.confirm('Clear all CV data?')) {
+      localStorage.removeItem('cvData');
+      setCvData(defaultCvData);
     }
   };
 
-  const handleDeleteSection = (id) => {
-    setCustomSections(customSections.filter((s) => s.id !== id));
-  };
-
   return (
-    <div>
-      <div className="app-container">
-        <div className="download-actions">
-          <CustomButton
-            text="Download as PDF"
-            handleClick={handleDownloadPdf}
-            type="button"
-          />
-        </div>
+    <div className="app-container">
+      <div className="download-actions">
+        <CustomButton
+          text="Download as PDF"
+          handleClick={handleDownloadPdf}
+          type="button"
+        />
+        <CustomButton text="Reset All" handleClick={handleReset} type="button" />
+      </div>
 
-        <div className="cv-wrapper" ref={cvRef}>
-          <GeneralInfo />
-          <EducationalExperience />
-          <WorkExperience />
-
-          {/* Render dynamically added sections */}
-          {customSections.map((section) => (
-            <ExperienceSection
-              key={section.id}
-              title={section.title}
-              fields={[
-                { id: "title", label: "Title", type: "text", required: true },
-                { id: "subtitle", label: "Subtitle", type: "text" },
-                { id: "date", label: "Date", type: "text" },
-                {
-                  id: "description",
-                  label: "Description",
-                  type: "textarea",
-                  rows: 4,
-                },
-              ]}
-              initialItems={[]}
-              getMainText={(item) => item.title}
-              getSubText={(item) => item.subtitle}
-              getDateText={(item) => item.date}
-              renderExtraContent={(item) =>
-                item.description ? (
-                  <p
-                    style={{
-                      marginTop: "4px",
-                      whiteSpace: "pre-wrap",
-                    }}
-                  >
-                    {item.description}
-                  </p>
-                ) : null
-              }
-              onDelete={() => handleDeleteSection(section.id)}
-            />
-          ))}
-        </div>
-
-        {/* Add Section Area */}
-        {!isAddingSection ? (
-          <div className="add-actions" style={{ marginTop: "16px" }}>
-
-            <CustomButton
-              text="Add a Section"
-              handleClick={() => setIsAddingSection(true)}
-              type="button"
-            />
-          </div>
-        ) : (
-          <form
-            onSubmit={handleAddSection}
-            style={{
-              marginTop: "12px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "8px",
-              alignItems: "flex-",
-            }}
-          >
-            <label htmlFor="newSectionTitle">
-              Enter a section title (e.g. Projects, Awards):
-            </label>
-            <input
-              id="newSectionTitle"
-              type="text"
-              value={newSectionTitle}
-              onChange={(e) => setNewSectionTitle(e.target.value.toUpperCase())}
-              required
-              style={{
-                padding: "8px",
-                border: "1px solid #ccc",
-                borderRadius: "6px",
-                width: "280px",
-              }}
-            />
-            <div style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
-              <CustomButton text="Add" type="submit" />
-              <CustomButton
-                text="Cancel"
-                handleClick={() => {
-                  setNewSectionTitle("");
-                  setIsAddingSection(false);
-                }}
-              />
-            </div>
-          </form>
-        )}
-
+      <div className="cv-wrapper">
+        <GeneralInfo data={cvData.generalInfo} onChange={updateGeneralInfo} />
+        <EducationalExperience
+          data={cvData.education}
+          onChange={updateEducation}
+        />
+        <WorkExperience data={cvData.work} onChange={updateWork} />
       </div>
     </div>
   );

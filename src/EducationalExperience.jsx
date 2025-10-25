@@ -1,5 +1,6 @@
 
 import ExperienceSection from "./ExperienceSection";
+import { useState, useEffect } from "react";
 
 const educationFields = [
     { label: "School Name", id: "schoolName", type: "text", required: true },
@@ -8,20 +9,20 @@ const educationFields = [
     { label: "Date To", id: "dateTo", type: "text", required: true },
 ];
 
-const initialEducation = [
-    {
-        schoolName: "Cornell University, College of Arts and Sciences",
-        titleOfStudy: "Bachelor of Arts, Information Science",
-        dateFrom: "2022",
-        dateTo: "2026",
-    },
-    {
-        schoolName: "German Swiss International School",
-        titleOfStudy: "High School Diploma",
-        dateFrom: "2018",
-        dateTo: "2022",
-    },
-];
+// const initialEducation = [
+//     {
+//         schoolName: "Cornell University, College of Arts and Sciences",
+//         titleOfStudy: "Bachelor of Arts, Information Science",
+//         dateFrom: "2022",
+//         dateTo: "2026",
+//     },
+//     {
+//         schoolName: "German Swiss International School",
+//         titleOfStudy: "High School Diploma",
+//         dateFrom: "2018",
+//         dateTo: "2022",
+//     },
+// ];
 
 function getMainText(item) {
     return item.schoolName;
@@ -38,12 +39,23 @@ const educationRows = [
     ["titleOfStudy", "dateTo"],
 ];
 
-function EducationalExperience() {
+function EducationalExperience({ data, onChange }) {
+    const [items, setItems] = useState(data || []);
+
+    useEffect(() => {
+        if (Array.isArray(data)) {
+            setItems(data);
+        }
+    }, [data]);
+
+    useEffect(() => {
+        onChange(items);
+    }, [items, onChange]);
     return (
         <ExperienceSection
             title="EDUCATION"
             fields={educationFields}
-            initialItems={initialEducation}
+            initialItems={items}
             getMainText={getMainText}
             getSubText={getSubText}
             getDateText={getDateText}
