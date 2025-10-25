@@ -1,15 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import CustomButton from "./CustomButton";
 
 function GeneralInfo({ data, onChange }) {
+    const defaultFormValues = useMemo(() => ({
+        name: "Lauren Mok",
+        email: "laurensymok@gmail.com",
+        phone: "607-339-1653",
+        linkedIn: "linkedin.com/in/laurensymok",
+        website: "laurensymok.com",
+    }), []);
+
     const [form, setForm] = useState({
-        name: data?.name || "Lauren Mok",
-        email: data?.email || "laurensymok@gmail.com",
-        phone: data?.phone || "607-339-1653",
-        linkedIn: data?.linkedIn || "linkedin.com/in/laurensymok",
-        website: data?.website || "laurensymok.com"
+        ...defaultFormValues,
+        ...data,
     });
     const [isEditing, setIsEditing] = useState(false);
+
+    useEffect(() => {
+        setForm({
+            ...defaultFormValues,
+            ...data,
+        });
+    }, [data, defaultFormValues]);
 
     useEffect(() => {
         onChange(form);
@@ -31,7 +43,10 @@ function GeneralInfo({ data, onChange }) {
     const handleEdit = () => setIsEditing(true);
     const handleCancel = () => {
         // Reset to last saved version from props
-        setForm(data);
+        setForm({
+            ...defaultFormValues,
+            ...data,
+        });
         setIsEditing(false);
     };
 

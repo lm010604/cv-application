@@ -1,6 +1,5 @@
 
 import ExperienceSection from "./ExperienceSection";
-import { useState, useEffect } from "react";
 
 const educationFields = [
     { label: "School Name", id: "schoolName", type: "text", required: true },
@@ -40,22 +39,12 @@ const educationRows = [
 ];
 
 function EducationalExperience({ data, onChange }) {
-    const [items, setItems] = useState(data || []);
-
-    useEffect(() => {
-        if (Array.isArray(data)) {
-            setItems(data);
-        }
-    }, [data]);
-
-    useEffect(() => {
-        onChange(items);
-    }, [items, onChange]);
     return (
         <ExperienceSection
             title="EDUCATION"
             fields={educationFields}
-            initialItems={items}
+            items={data}
+            onItemsChange={onChange}
             getMainText={getMainText}
             getSubText={getSubText}
             getDateText={getDateText}

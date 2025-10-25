@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import ExperienceItem from "./ExperienceItem";
 import ExperienceForm from "./ExperienceForm";
 import CustomButton from "./CustomButton";
@@ -6,26 +6,49 @@ import CustomButton from "./CustomButton";
 function ExperienceSection({
     title,
     fields,
-    initialItems = [],
+    items = [],
+    onItemsChange,
     getMainText,
     getSubText,
     getDateText,
     extraFormFields, // for textarea or other custom fields
     formRows,
     renderExtraContent,
+    initialFormValues = {},
 }) {
-    const [items, setItems] = useState(Array.isArray(initialItems) ? initialItems : []);
-    const [form, setForm] = useState(fields.reduce((acc, f) => ({ ...acc, [f.id]: "" }), {}));
+    const buildEmptyForm = useCallback(
+        () =>
+            fields.reduce(
+                (acc, field) => ({
+                    ...acc,
+                    [field.id]: "",
+                }),
+                { ...initialFormValues }
+            ),
+        [fields, initialFormValues]
+    );
+
+    const [form, setForm] = useState(() => buildEmptyForm());
     const [error, setError] = useState("");
     const [isAdding, setIsAdding] = useState(false);
     const [editIdx, setEditIdx] = useState(null);
 
-    useEffect(() => {
-        if (Array.isArray(initialItems)) {
-            setItems(initialItems);
-        }
-    }, [initialItems]);
+    const safeItems = useMemo(() => (Array.isArray(items) ? items : []), [items]);
 
+    useEffect(() => {
+        if (editIdx !== null) {
+            const item = safeItems[editIdx];
+            if (item) {
+                setForm({
+                    ...buildEmptyForm(),
+                    ...item,
+                });
+            } else {
+                setEditIdx(null);
+                setForm(buildEmptyForm());
+            }
+        }
+    }, [safeItems, editIdx, buildEmptyForm]);
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -33,14 +56,17 @@ function ExperienceSection({
     };
 
     const handleAdd = () => {
-        setForm(fields.reduce((acc, f) => ({ ...acc, [f.id]: "" }), {}));
+        setForm(buildEmptyForm());
         setIsAdding(true);
         setEditIdx(null);
         setError("");
     };
 
     const handleEdit = (idx) => {
-        setForm({ ...items[idx] });
+        setForm({
+            ...buildEmptyForm(),
+            ...safeItems[idx],
+        });
         setEditIdx(idx);
         setIsAdding(false);
     };
@@ -54,29 +80,29 @@ function ExperienceSection({
             return;
         }
         setError("");
-        if (editIdx !== null) {
-            setItems((prev) => prev.map((exp, idx) => idx === editIdx ? form : exp));
-        } else {
-            setItems((prev) => [...prev, form]);
-        }
-        setForm(fields.reduce((acc, f) => ({ ...acc, [f.id]: "" }), {}));
+        const nextItems = editIdx !== null
+            ? safeItems.map((exp, idx) => (idx === editIdx ? { ...form } : exp))
+            : [...safeItems, { ...form }];
+        onItemsChange?.(nextItems);
+        setForm(buildEmptyForm());
         setIsAdding(false);
         setEditIdx(null);
     };
 
     const handleCancel = () => {
-        setForm(fields.reduce((acc, f) => ({ ...acc, [f.id]: "" }), {}));
+        setForm(buildEmptyForm());
         setIsAdding(false);
         setEditIdx(null);
         setError("");
     };
 
     const handleDelete = (idx) => {
-        setItems((prev) => prev.filter((_, i) => i !== idx));
+        const nextItems = safeItems.filter((_, i) => i !== idx);
+        onItemsChange?.(nextItems);
         if (editIdx === idx) {
             setEditIdx(null);
             setIsAdding(false);
-            setForm(fields.reduce((acc, f) => ({ ...acc, [f.id]: "" }), {}));
+            setForm(buildEmptyForm());
         }
     };
 
@@ -108,7 +134,7 @@ function ExperienceSection({
         <section>
             <p>{title}</p>
             <hr />
-            {items.map((item, idx) => (
+            {safeItems.map((item, idx) => (
                 <ExperienceItem
                     key={idx}
                     mainText={getMainText(item)}
