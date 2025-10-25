@@ -9,6 +9,8 @@ import ExperienceSection from "./ExperienceSection";
 function App() {
   const cvRef = useRef(null);
   const [customSections, setCustomSections] = useState([]);
+  const [isAddingSection, setIsAddingSection] = useState(false);
+  const [newSectionTitle, setNewSectionTitle] = useState("");
 
   const handleDownloadPdf = () => {
     if (!cvRef.current) return;
@@ -20,10 +22,13 @@ function App() {
     }, 0);
   };
 
-  const handleAddSection = () => {
-    const title = prompt("Enter a section title (e.g. Projects, Awards):");
-    if (title && title.trim() !== "") {
+  const handleAddSection = (e) => {
+    e.preventDefault();
+    const title = newSectionTitle.trim();
+    if (title !== "") {
       setCustomSections([...customSections, { id: Date.now(), title }]);
+      setNewSectionTitle("");
+      setIsAddingSection(false);
     }
   };
 
@@ -82,17 +87,58 @@ function App() {
               onDelete={() => handleDeleteSection(section.id)}
             />
           ))}
-
-
-
         </div>
-        <div className="add-actions">
-          <CustomButton
-            text="Add a Section"
-            handleClick={handleAddSection}
-            type="button"
-          />
-        </div>
+
+        {/* Add Section Area */}
+        {!isAddingSection ? (
+          <div className="add-actions" style={{ marginTop: "16px" }}>
+
+            <CustomButton
+              text="Add a Section"
+              handleClick={() => setIsAddingSection(true)}
+              type="button"
+            />
+          </div>
+        ) : (
+          <form
+            onSubmit={handleAddSection}
+            style={{
+              marginTop: "12px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+              alignItems: "flex-",
+            }}
+          >
+            <label htmlFor="newSectionTitle">
+              Enter a section title (e.g. Projects, Awards):
+            </label>
+            <input
+              id="newSectionTitle"
+              type="text"
+              value={newSectionTitle}
+              onChange={(e) => setNewSectionTitle(e.target.value.toUpperCase())}
+              required
+              style={{
+                padding: "8px",
+                border: "1px solid #ccc",
+                borderRadius: "6px",
+                width: "280px",
+              }}
+            />
+            <div style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
+              <CustomButton text="Add" type="submit" />
+              <CustomButton
+                text="Cancel"
+                handleClick={() => {
+                  setNewSectionTitle("");
+                  setIsAddingSection(false);
+                }}
+              />
+            </div>
+          </form>
+        )}
+
       </div>
     </div>
   );

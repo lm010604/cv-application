@@ -73,13 +73,29 @@ function ExperienceSection({
         }
     };
 
-    // Determine button text based on title
-    let addButtonText = "Add Experience";
-    if (title.toLowerCase().includes("education")) {
-        addButtonText = "Add Education";
-    } else if (title.toLowerCase().includes("work")) {
-        addButtonText = "Add Work Experience";
-    }
+    const getAddButtonText = (title) => {
+        if (!title) return "Add Item";
+        const normalized = title.trim().toLowerCase();
+        const map = {
+            education: "Add Education",
+            work: "Add Work Experience",
+            experience: "Add Experience",
+            project: "Add Project",
+            award: "Add Award",
+            publication: "Add Publication",
+            skill: "Add Skill",
+        };
+
+        for (const key in map) {
+            if (normalized.includes(key)) return map[key];
+        }
+
+        const firstWord = title.split(" ")[0];
+        return `Add ${firstWord}`;
+    };
+
+    const addButtonText = getAddButtonText(title);
+
 
     return (
         <section>
