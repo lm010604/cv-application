@@ -3,11 +3,11 @@ import CustomButton from "./CustomButton";
 
 function GeneralInfo(props) {
     const [form, setForm] = useState({
-        name: props.name || "Lauren Mok",
-        email: props.email || "laurensymok@gmail.com",
-        phone: props.phone || "607-339-1653",
-        linkedIn: props.linkedIn || "linkedin.com/in/laurensymok",
-        website: props.website || "laurensymok.com"
+        name: props.name || "Jane Doe",
+        email: props.email || "janedoe@example.com",
+        phone: props.phone || "555-555-5555",
+        linkedIn: props.linkedIn || "linkedin.com/in/janedoe",
+        website: props.website || "janedoe.com"
     });
     const [isEditing, setIsEditing] = useState(false);
 

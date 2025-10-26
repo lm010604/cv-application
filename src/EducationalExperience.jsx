@@ -10,17 +10,11 @@ const educationFields = [
 
 const initialEducation = [
     {
-        schoolName: "Cornell University, College of Arts and Sciences",
-        titleOfStudy: "Bachelor of Arts, Information Science",
+        schoolName: "Cornell University, College of Engineering",
+        titleOfStudy: "Bachelor of Engineering, Computer Science",
         dateFrom: "2022",
         dateTo: "2026",
-    },
-    {
-        schoolName: "German Swiss International School",
-        titleOfStudy: "High School Diploma",
-        dateFrom: "2018",
-        dateTo: "2022",
-    },
+    }
 ];
 
 function getMainText(item) {
