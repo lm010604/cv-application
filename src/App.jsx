@@ -6,6 +6,7 @@ import EducationalExperience from "./EducationalExperience";
 import WorkExperience from "./WorkExperience";
 import ExperienceSection from "./ExperienceSection";
 
+
 function App() {
   const cvRef = useRef(null);
   const [customSections, setCustomSections] = useState([]);
@@ -26,7 +27,7 @@ function App() {
     e.preventDefault();
     const title = newSectionTitle.trim();
     if (title !== "") {
-      setCustomSections([...customSections, { id: Date.now(), title }]);
+      setCustomSections([...customSections, { id: Date.now(), title, isCustom: true }]);
       setNewSectionTitle("");
       setIsAddingSection(false);
     }
@@ -84,6 +85,7 @@ function App() {
                   </p>
                 ) : null
               }
+              isCustom={section.isCustom}
               onDelete={() => handleDeleteSection(section.id)}
             />
           ))}

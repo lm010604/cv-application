@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import ExperienceItem from "./ExperienceItem";
 import ExperienceForm from "./ExperienceForm";
 import CustomButton from "./CustomButton";
+import ConfirmModal from "./ConfirmModal";
 
 function ExperienceSection({
+    id,
     title,
     fields,
     initialItems,
@@ -13,12 +15,16 @@ function ExperienceSection({
     extraFormFields, // for textarea or other custom fields
     formRows,
     renderExtraContent,
+    isCustom,
+    onDelete
 }) {
     const [items, setItems] = useState(initialItems);
     const [form, setForm] = useState(fields.reduce((acc, f) => ({ ...acc, [f.id]: "" }), {}));
     const [error, setError] = useState("");
     const [isAdding, setIsAdding] = useState(false);
     const [editIdx, setEditIdx] = useState(null);
+    const [showConfirm, setShowConfirm] = useState(false);
+
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -57,6 +63,15 @@ function ExperienceSection({
         setEditIdx(null);
     };
 
+    const handleDeleteClick = () => setShowConfirm(true);
+
+    const handleConfirm = () => {
+        onDelete(id);
+        setShowConfirm(false);
+    };
+
+    const handleCancelDelete = () => setShowConfirm(false);
+
     const handleCancel = () => {
         setForm(fields.reduce((acc, f) => ({ ...acc, [f.id]: "" }), {}));
         setIsAdding(false);
@@ -91,7 +106,8 @@ function ExperienceSection({
         }
 
         const firstWord = title.split(" ")[0];
-        return `Add ${firstWord}`;
+        const formattedWord = firstWord.charAt(0).toUpperCase() + firstWord.slice(1).toLowerCase();
+        return `Add ${formattedWord}`;
     };
 
     const addButtonText = getAddButtonText(title);
@@ -99,51 +115,66 @@ function ExperienceSection({
 
     return (
         <section>
-            <p>{title}</p>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0" }}>
+                <p style={{ margin: 0 }}>{title}</p>
+                {isCustom && (<CustomButton isIcon isDeleteIcon handleClick={handleDeleteClick} />)}
+            </div>
             <hr />
-            {items.map((item, idx) => (
-                <ExperienceItem
-                    key={idx}
-                    mainText={getMainText(item)}
-                    subText={getSubText(item)}
-                    dateText={getDateText(item)}
-                    onEdit={() => handleEdit(idx)}
-                    onDelete={() => handleDelete(idx)}
-                >
-                    {renderExtraContent && editIdx !== idx && renderExtraContent(item)}
-                    {editIdx === idx && (
-                        <ExperienceForm
-                            fields={fields}
-                            form={form}
-                            onChange={handleChange}
-                            onSave={handleSave}
-                            onCancel={handleCancel}
-                            error={error}
-                            rows={formRows}
-                        >
-                            {extraFormFields && extraFormFields(form, handleChange)}
-                        </ExperienceForm>
-                    )}
-                </ExperienceItem>
-            ))}
-            {isAdding ? (
-                <ExperienceForm
-                    fields={fields}
-                    form={form}
-                    onChange={handleChange}
-                    onSave={handleSave}
-                    onCancel={handleCancel}
-                    error={error}
-                    rows={formRows}
-                >
-                    {extraFormFields && extraFormFields(form, handleChange)}
-                </ExperienceForm>
-            ) : (
-                <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
-                    <CustomButton handleClick={handleAdd} text={addButtonText} />
-                </div>
-            )}
-        </section>
+            <ConfirmModal
+                isOpen={showConfirm}
+                title="Delete Section"
+                message={`Are you sure you want to delete "${title}"? This action cannot be undone.`}
+                onConfirm={handleConfirm}
+                onCancel={handleCancelDelete}
+            />
+            {
+                items.map((item, idx) => (
+                    <ExperienceItem
+                        key={idx}
+                        mainText={getMainText(item)}
+                        subText={getSubText(item)}
+                        dateText={getDateText(item)}
+                        onEdit={() => handleEdit(idx)}
+                        onDelete={() => handleDelete(idx)}
+
+                    >
+                        {renderExtraContent && editIdx !== idx && renderExtraContent(item)}
+                        {editIdx === idx && (
+                            <ExperienceForm
+                                fields={fields}
+                                form={form}
+                                onChange={handleChange}
+                                onSave={handleSave}
+                                onCancel={handleCancel}
+                                error={error}
+                                rows={formRows}
+                            >
+                                {extraFormFields && extraFormFields(form, handleChange)}
+                            </ExperienceForm>
+                        )}
+                    </ExperienceItem>
+                ))
+            }
+            {
+                isAdding ? (
+                    <ExperienceForm
+                        fields={fields}
+                        form={form}
+                        onChange={handleChange}
+                        onSave={handleSave}
+                        onCancel={handleCancel}
+                        error={error}
+                        rows={formRows}
+                    >
+                        {extraFormFields && extraFormFields(form, handleChange)}
+                    </ExperienceForm>
+                ) : (
+                    <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+                        <CustomButton handleClick={handleAdd} text={addButtonText} />
+                    </div>
+                )
+            }
+        </section >
     );
 }
 
