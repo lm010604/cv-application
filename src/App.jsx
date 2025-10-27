@@ -107,7 +107,10 @@ function App() {
               display: "flex",
               flexDirection: "column",
               gap: "8px",
-              alignItems: "flex-",
+              alignItems: "flex-start",
+              marginLeft: "20px",
+              marginRight: "20px",
+              backgroundColor: "rgb(225, 239, 248)"
             }}
           >
             <label htmlFor="newSectionTitle">
@@ -124,6 +127,7 @@ function App() {
                 border: "1px solid #ccc",
                 borderRadius: "6px",
                 width: "280px",
+
               }}
             />
             <div style={{ display: "flex", gap: "8px", marginTop: "4px" }}>

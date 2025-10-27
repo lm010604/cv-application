@@ -37,7 +37,8 @@ body {
 
 .add-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  margin-left: 40px;
   margin-bottom: 16px;
 }
 
